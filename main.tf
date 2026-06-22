@@ -109,3 +109,14 @@ module "compute" {
     project     = "az104-landing-zone"
   }
 }
+
+module "database" {
+  source      = "./modules/database"
+  environment = "dev"
+  my_ip_address = var.my_ip_address
+
+  tags = {
+    environment = "dev"
+    project     = "az104-landing-zone"
+  }
+}
