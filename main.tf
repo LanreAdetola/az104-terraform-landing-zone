@@ -1,74 +1,23 @@
 module "networking" {
   source              = "./modules/networking"
-  environment         = "dev"
-  location            = "spaincentral"
-  spoke_address_space = ["10.1.0.0/16"]
-  subnet_prefixes = {
-    frontend = "10.1.1.0/24"
-    backend  = "10.1.2.0/24"
-    data     = "10.1.3.0/24"
-  }
+  environment         = var.environment
+  location            = var.location
+  spoke_address_space = var.spoke_address_space
+  subnet_prefixes     = var.subnet_prefixes
+
   tags = {
-    environment = "dev"
+    environment = var.environment
     project     = "az104-landing-zone"
   }
-  nsg_rules = [
-    {
-      name                       = "allow-https-inbound"
-      subnet_key                 = "frontend"
-      priority                   = 100
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "443"
-      source_address_prefix      = "*"
-      destination_address_prefix = "*"
-    },
-    {
-      name                       = "allow-frontend-to-backend"
-      subnet_key                 = "backend"
-      priority                   = 100
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "8080"
-      source_address_prefix      = "10.1.1.0/24"
-      destination_address_prefix = "*"
-    },
-    {
-      name                       = "allow-backend-to-data"
-      subnet_key                 = "data"
-      priority                   = 100
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "1433"
-      source_address_prefix      = "10.1.2.0/24"
-      destination_address_prefix = "*"
-    },
-    {
-      name                       = "deny-all-inbound"
-      subnet_key                 = "data"
-      priority                   = 4096
-      direction                  = "Inbound"
-      access                     = "Deny"
-      protocol                   = "*"
-      source_port_range          = "*"
-      destination_port_range     = "*"
-      source_address_prefix      = "*"
-      destination_address_prefix = "*"
-    }
-  ]
+
+  nsg_rules = var.nsg_rules
 }
 
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "main" {
-  name                       = "kv-az104-dev-${random_string.kv_suffix.result}"
-  location                   = "spaincentral"
+  name                       = "kv-az104-${var.environment}-${random_string.kv_suffix.result}"
+  location                   = var.location
   resource_group_name        = module.networking.resource_group_name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "standard"
@@ -81,6 +30,7 @@ resource "random_string" "kv_suffix" {
   special = false
   upper   = false
 }
+
 resource "azurerm_key_vault_access_policy" "current_user" {
   key_vault_id = azurerm_key_vault.main.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
@@ -95,40 +45,40 @@ resource "azurerm_key_vault_access_policy" "current_user" {
 }
 
 module "compute" {
-  source               = "./modules/compute"
-  environment          = "dev"
-  location             = "spaincentral"
-  resource_group_name  = module.networking.resource_group_name
-  frontend_subnet_id   = module.networking.subnet_ids["frontend"]
-  backend_subnet_id    = module.networking.subnet_ids["backend"]
-  app_service_sku      = "B1"
-  key_vault_id         = azurerm_key_vault.main.id
+  source              = "./modules/compute"
+  environment         = var.environment
+  location            = var.location
+  resource_group_name = module.networking.resource_group_name
+  frontend_subnet_id  = module.networking.subnet_ids["frontend"]
+  backend_subnet_id   = module.networking.subnet_ids["backend"]
+  app_service_sku     = var.app_service_sku
+  key_vault_id        = azurerm_key_vault.main.id
 
   tags = {
-    environment = "dev"
+    environment = var.environment
     project     = "az104-landing-zone"
   }
 }
 
 module "database" {
-  source      = "./modules/database"
-  environment = "dev"
-  location    = "spaincentral"
+  source              = "./modules/database"
+  environment         = var.environment
+  location            = var.location
   resource_group_name = module.networking.resource_group_name
 
   tags = {
-    environment = "dev"
+    environment = var.environment
     project     = "az104-landing-zone"
   }
 }
 
 module "governance" {
   source      = "./modules/governance"
-  environment = "dev"
+  environment = var.environment
   scope_id    = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${module.networking.resource_group_name}"
 
   tags = {
-    environment = "dev"
+    environment = var.environment
     project     = "az104-landing-zone"
   }
 }
