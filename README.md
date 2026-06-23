@@ -6,7 +6,7 @@ A hub-and-spoke Azure landing zone built with Terraform, designed to apply AZ-10
 
 - **Hub-and-spoke network topology**: central hub VNet with shared services, spoke VNets per environment, connected via VNet peering.
 - **Network segmentation**: dedicated subnets (frontend, backend, data) per spoke, each governed by its own NSG with explicit allow/deny rules.
-- **Three-tier application pattern**: frontend → backend → database, with traffic restricted tier-to-tier (e.g. only backend can reach the data subnet, only on port 1433).
+- **Three-tier application pattern**: frontend → backend → database, with traffic restricted tier-to-tier (e.g. only backend can reach the data subnet, only on port 443 (HTTPS — Cosmos DB's protocol)).
 - **Identity-first design**: Managed Identities for app authentication, no stored credentials or connection strings. Secrets pulled from Key Vault at runtime.
 - **Cosmos DB (Core/SQL API)**: free-tier Cosmos DB account with Azure AD-only authentication (local/key-based auth disabled), continuous backup, and a throughput cap to control cost.
 - **Governance via Azure Policy**: built-in policy assignments enforcing required tags and restricting deployments to a single approved region.
