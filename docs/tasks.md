@@ -19,6 +19,7 @@ Project: Hub-and-spoke landing zone with multi-environment (dev/prod) support, T
 ## Phase 2: Project Structure
 
 ### Root-level files
+
 - [x] 2.1 Create root project folder (`az104-landing-zone`)
 - [x] 2.2 Create `providers.tf`
 - [x] 2.3 Create `backend.tf`
@@ -28,6 +29,7 @@ Project: Hub-and-spoke landing zone with multi-environment (dev/prod) support, T
 - [x] 2.7 Create `.gitignore`
 
 ### Networking module
+
 - [x] 2.8 Create `modules/` folder
 - [x] 2.9 Create `modules/networking/` folder
 - [x] 2.10 Create `modules/networking/variables.tf`
@@ -41,6 +43,7 @@ Project: Hub-and-spoke landing zone with multi-environment (dev/prod) support, T
 - [x] 2.12 Create `modules/networking/outputs.tf`
 
 ### Compute module
+
 - [x] 2.13 Create `modules/compute/` folder
 - [x] 2.14 Create `modules/compute/variables.tf`
 - [x] 2.15 Create `modules/compute/main.tf`
@@ -52,6 +55,7 @@ Project: Hub-and-spoke landing zone with multi-environment (dev/prod) support, T
 - [x] 2.16 Create `modules/compute/outputs.tf`
 
 ### Database module
+
 - [x] 2.17 Create `modules/database/` folder
 - [x] 2.18 Create `modules/database/variables.tf`
 - [x] 2.19 Create `modules/database/main.tf`
@@ -61,6 +65,7 @@ Project: Hub-and-spoke landing zone with multi-environment (dev/prod) support, T
 - [x] 2.20 Create `modules/database/outputs.tf`
 
 ### Governance module
+
 - [x] 2.21 Create `modules/governance/` folder
 - [x] 2.22 Create `modules/governance/variables.tf`
 - [x] 2.23 Create `modules/governance/main.tf`
@@ -70,8 +75,9 @@ Project: Hub-and-spoke landing zone with multi-environment (dev/prod) support, T
 - [x] 2.24 Create `modules/governance/outputs.tf`
 
 ### Environment variable files
-- [x] 2.25 Create `dev.tfvars`
-- [ ] 2.26 Create `prod.tfvars`
+
+- [x] 2.25 Create `environments/dev.tfvars`
+- [x] 2.26 Create `environments/prod.tfvars`
 
 ---
 
@@ -89,11 +95,11 @@ Project: Hub-and-spoke landing zone with multi-environment (dev/prod) support, T
 
 - [x] 4.1 `terraform init`
 - [x] 4.2 `terraform validate`
-- [x] 4.3 `terraform plan -var-file="dev.tfvars"` — clean across all 4 modules
-- [x] 4.4 `terraform apply -var-file="dev.tfvars"` — networking only
+- [x] 4.3 `terraform plan -var-file="environments/dev.tfvars"` — clean across all 4 modules
+- [x] 4.4 `terraform apply -var-file="environments/dev.tfvars"` — networking only
 - [x] 4.5 Verify resources in Azure Portal — networking confirmed (VNets, NSGs, peering)
 - [ ] 4.6 Apply and verify compute, database, governance live
-- [ ] 4.7 Repeat plan/apply with `prod.tfvars`
+- [ ] 4.7 Repeat plan/apply with `environments/prod.tfvars`
 - [x] 4.8 Confirm free-tier limits respected (App Service B1, Cosmos DB free tier)
 
 ---
@@ -109,6 +115,7 @@ Project: Hub-and-spoke landing zone with multi-environment (dev/prod) support, T
 ---
 
 ## Notes
+
 - Database: Cosmos DB (Core/SQL API), free tier, Azure AD-only auth — no connection strings or keys used anywhere in the project.
 - Keep `*.tfvars` and `*.tfstate` out of Git (see `.gitignore`).
 - Learning approach: write code first, review/debug together, then iterate.

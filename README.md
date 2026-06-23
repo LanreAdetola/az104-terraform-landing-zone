@@ -20,7 +20,7 @@ A hub-and-spoke Azure landing zone built with Terraform, designed to apply AZ-10
 
 All four modules pass `terraform plan` cleanly with no errors. Networking is the only module currently deployed live; the rest are infrastructure-as-code, ready to deploy on demand.
 
-See [`Tasks/tasks.md`](./Tasks/tasks.md) for the full build checklist.
+See [`docs/tasks.md`](./docs/tasks.md) for the full build checklist.
 
 ## Structure
 
@@ -36,7 +36,9 @@ az104-landing-zone/
 
 ├── backend.tf         # Remote state configuration (Azure Storage)
 
-├── dev.tfvars         # Environment-specific values (gitignored)
+├── environments/
+│   ├── dev.tfvars     # Environment-specific values (gitignored)
+│   └── prod.tfvars    # Environment-specific values (gitignored)
 
 ├── modules/
 
@@ -48,10 +50,9 @@ az104-landing-zone/
 
 │   └── governance/    # Azure Policy assignments
 
-└── Tasks/
+└── docs/
 
 └── tasks.md       # Build checklist
-
 
 ## Why this project
 
@@ -75,8 +76,8 @@ A few deliberate trade-offs were made to keep this project free-tier-friendly an
 
 ```bash
 terraform init
-terraform plan -var-file="dev.tfvars"
-terraform apply -var-file="dev.tfvars"
+terraform plan -var-file="environments/dev.tfvars"
+terraform apply -var-file="environments/dev.tfvars"
 ```
 
-Note: `dev.tfvars` and `prod.tfvars` are gitignored (not included in this repo) since they contain environment-specific values, including networking ranges and NSG rule definitions. Create your own `.tfvars` file based on the variables declared in root `variables.tf`.
+Note: `environments/dev.tfvars` and `environments/prod.tfvars` are gitignored (not included in this repo) since they contain environment-specific values, including networking ranges and NSG rule definitions. Create your own `.tfvars` file under `environments/` based on the variables declared in root `variables.tf`.

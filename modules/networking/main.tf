@@ -53,14 +53,14 @@ resource "azurerm_network_security_rule" "spoke" {
 
 resource "azurerm_virtual_network_peering" "hub_to_spoke" {
   name                      = "peer-hub-to-spoke-${var.environment}"
-  resource_group_name      = azurerm_resource_group.networking.name
-  virtual_network_name     = azurerm_virtual_network.hub.name
+  resource_group_name       = azurerm_resource_group.networking.name
+  virtual_network_name      = azurerm_virtual_network.hub.name
   remote_virtual_network_id = azurerm_virtual_network.spoke.id
 }
 
 resource "azurerm_virtual_network_peering" "spoke_to_hub" {
   name                      = "peer-spoke-to-hub-${var.environment}"
-  resource_group_name      = azurerm_resource_group.networking.name
-  virtual_network_name     = azurerm_virtual_network.spoke.name
+  resource_group_name       = azurerm_resource_group.networking.name
+  virtual_network_name      = azurerm_virtual_network.spoke.name
   remote_virtual_network_id = azurerm_virtual_network.hub.id
 }

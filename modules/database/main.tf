@@ -19,8 +19,8 @@ resource "azurerm_cosmosdb_account" "main" {
   }
 
   backup {
-    type                = "Continuous"
-    tier                = "Continuous7Days"
+    type = "Continuous"
+    tier = "Continuous7Days"
   }
 
   capacity {
