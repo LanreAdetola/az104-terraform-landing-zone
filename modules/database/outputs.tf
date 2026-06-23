@@ -1,14 +1,14 @@
-output "database_id" {
-  description = "ID of the created database"
-  value       = azurerm_mssql_database.main.id
+output "cosmosdb_account_name" {
+  description = "Name of the Cosmos DB account"
+  value       = azurerm_cosmosdb_account.main.name
 }
 
-output "database_name" {
-  description = "Name of the created database"
-  value       = azurerm_mssql_database.main.name
+output "cosmosdb_endpoint" {
+  description = "Endpoint URI for the Cosmos DB account, used by apps to connect"
+  value       = azurerm_cosmosdb_account.main.endpoint
 }
 
-output "server_fqdn" {
-  description = "Fully qualified domain name of the SQL Server, used for app connection strings"
-  value       = data.azurerm_mssql_server.existing.fully_qualified_domain_name
+output "cosmosdb_account_id" {
+  description = "Resource ID of the Cosmos DB account"
+  value       = azurerm_cosmosdb_account.main.id
 }

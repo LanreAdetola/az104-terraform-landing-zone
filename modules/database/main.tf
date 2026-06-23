@@ -1,25 +1,41 @@
-data "azurerm_mssql_server" "existing" {
-  name                = "bankretain-sql-dev-mqi4i4pjzxcdc"
-  resource_group_name = "bankretain-ml-rg"
-}
-resource "azurerm_mssql_database" "main" {
-  name      = "db-${var.environment}"
-  server_id = data.azurerm_mssql_server.existing.id
-  sku_name  = "Free"
+resource "azurerm_cosmosdb_account" "main" {
+  name                = "cosmos-az104-${var.environment}-${random_string.cosmos_suffix.result}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  offer_type          = "Standard"
+  kind                = "GlobalDocumentDB"
 
-  tags = var.tags
+  free_tier_enabled             = true
+  local_authentication_disabled = true
+  minimal_tls_version           = "Tls12"
+
+  consistency_policy {
+    consistency_level = "Session"
+  }
+
+  geo_location {
+    location          = var.location
+    failover_priority = 0
+  }
+
+  backup {
+    type                = "Continuous"
+    tier                = "Continuous7Days"
+  }
+
+  capacity {
+    total_throughput_limit = 1000
+  }
+
+  is_virtual_network_filter_enabled = false
+
+  tags = merge(var.tags, {
+    defaultExperience = "Core (SQL)"
+  })
 }
 
-resource "azurerm_mssql_firewall_rule" "allow_azure_services" {
-  name             = "AllowAzureServices"
-  server_id        = data.azurerm_mssql_server.existing.id
-  start_ip_address = "0.0.0.0"
-  end_ip_address   = "0.0.0.0"
-}
-
-resource "azurerm_mssql_firewall_rule" "allow_my_ip" {
-  name             = "AllowMyIP"
-  server_id        = data.azurerm_mssql_server.existing.id
-  start_ip_address = var.my_ip_address
-  end_ip_address   = var.my_ip_address
+resource "random_string" "cosmos_suffix" {
+  length  = 6
+  special = false
+  upper   = false
 }

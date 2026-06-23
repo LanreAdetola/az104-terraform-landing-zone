@@ -113,7 +113,19 @@ module "compute" {
 module "database" {
   source      = "./modules/database"
   environment = "dev"
-  my_ip_address = var.my_ip_address
+  location    = "spaincentral"
+  resource_group_name = module.networking.resource_group_name
+
+  tags = {
+    environment = "dev"
+    project     = "az104-landing-zone"
+  }
+}
+
+module "governance" {
+  source      = "./modules/governance"
+  environment = "dev"
+  scope_id    = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${module.networking.resource_group_name}"
 
   tags = {
     environment = "dev"
