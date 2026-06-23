@@ -81,3 +81,15 @@ terraform apply -var-file="environments/dev.tfvars"
 ```
 
 Note: `environments/dev.tfvars` and `environments/prod.tfvars` are gitignored (not included in this repo) since they contain environment-specific values, including networking ranges and NSG rule definitions. Create your own `.tfvars` file under `environments/` based on the variables declared in root `variables.tf`.
+
+
+- **Frontend uses a second App Service rather than Azure Static Web Apps.** 
+  This subscription is on the Azure for Students tier, which enforces a 
+  tenant-level policy (`Allowed resource deployment regions`) restricting 
+  deployment to five regions: Spain Central, UAE North, Italy North, Germany 
+  West Central, and Switzerland North. Azure Static Web Apps is not available 
+  in any of these regions, so it wasn't a viable option for this project. 
+  The frontend was built as a second Linux App Service on the same plan as 
+  the backend instead — functionally correct, but not the cost/architecture 
+  optimum. In an unrestricted environment, this would be Azure Static Web 
+  Apps, with App Service reserved for the backend API only.
