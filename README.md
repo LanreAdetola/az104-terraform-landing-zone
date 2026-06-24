@@ -20,6 +20,12 @@ A hub-and-spoke Azure landing zone built with Terraform, designed to apply AZ-10
 
 All four modules pass `terraform plan` cleanly with no errors. Networking is the only module currently deployed live; the rest are infrastructure-as-code, ready to deploy on demand.
 
+**Deployed networking resources (Azure Portal):**
+
+![Deployed NSGs and VNets in Spain Central](images/Screenshot%202026-06-22%20at%2019.33.25.png)
+
+![VNet peering: hub-to-spoke fully synchronized and connected](images/Screenshot%202026-06-22%20at%2019.36.48.png)
+
 See [`docs/tasks.md`](./docs/tasks.md) for the full build checklist.
 
 ## Structure
@@ -82,14 +88,13 @@ terraform apply -var-file="environments/dev.tfvars"
 
 Note: `environments/dev.tfvars` and `environments/prod.tfvars` are gitignored (not included in this repo) since they contain environment-specific values, including networking ranges and NSG rule definitions. Create your own `.tfvars` file under `environments/` based on the variables declared in root `variables.tf`.
 
-
-- **Frontend uses a second App Service rather than Azure Static Web Apps.** 
-  This subscription is on the Azure for Students tier, which enforces a 
-  tenant-level policy (`Allowed resource deployment regions`) restricting 
-  deployment to five regions: Spain Central, UAE North, Italy North, Germany 
-  West Central, and Switzerland North. Azure Static Web Apps is not available 
-  in any of these regions, so it wasn't a viable option for this project. 
-  The frontend was built as a second Linux App Service on the same plan as 
-  the backend instead — functionally correct, but not the cost/architecture 
-  optimum. In an unrestricted environment, this would be Azure Static Web 
+- **Frontend uses a second App Service rather than Azure Static Web Apps.**
+  This subscription is on the Azure for Students tier, which enforces a
+  tenant-level policy (`Allowed resource deployment regions`) restricting
+  deployment to five regions: Spain Central, UAE North, Italy North, Germany
+  West Central, and Switzerland North. Azure Static Web Apps is not available
+  in any of these regions, so it wasn't a viable option for this project.
+  The frontend was built as a second Linux App Service on the same plan as
+  the backend instead — functionally correct, but not the cost/architecture
+  optimum. In an unrestricted environment, this would be Azure Static Web
   Apps, with App Service reserved for the backend API only.
