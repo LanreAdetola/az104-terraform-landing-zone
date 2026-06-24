@@ -30,35 +30,24 @@ See [`docs/tasks.md`](./docs/tasks.md) for the full build checklist.
 
 ## Structure
 
+```text
 az104-landing-zone/
-
 ├── main.tf            # Root module — orchestrates all child modules
-
 ├── variables.tf       # Root-level input variables
-
 ├── outputs.tf         # Root-level outputs (frontend/backend URLs, Cosmos DB endpoint, Key Vault URI)
-
 ├── providers.tf       # Provider configuration (azurerm, random)
-
 ├── backend.tf         # Remote state configuration (Azure Storage)
-
 ├── environments/
 │   ├── dev.tfvars     # Environment-specific values (gitignored)
 │   └── prod.tfvars    # Environment-specific values (gitignored)
-
 ├── modules/
-
 │   ├── networking/    # VNets, subnets, NSGs, peering
-
 │   ├── compute/       # App Services, Managed Identities, Key Vault access
-
 │   ├── database/      # Cosmos DB account (Core/SQL API, free tier)
-
 │   └── governance/    # Azure Policy assignments
-
 └── docs/
-
-└── tasks.md       # Build checklist
+    └── tasks.md       # Build checklist
+```
 
 ## Why this project
 
@@ -87,6 +76,10 @@ terraform apply -var-file="environments/dev.tfvars"
 ```
 
 Note: `environments/dev.tfvars` and `environments/prod.tfvars` are gitignored (not included in this repo) since they contain environment-specific values, including networking ranges and NSG rule definitions. Create your own `.tfvars` file under `environments/` based on the variables declared in root `variables.tf`.
+
+**Initial setup — authenticating with Azure CLI and creating the remote state resource group:**
+
+![az login and tfstate-rg resource group creation](images/Screenshot%202026-06-22%20at%2017.57.16.png)
 
 - **Frontend uses a second App Service rather than Azure Static Web Apps.**
   This subscription is on the Azure for Students tier, which enforces a
